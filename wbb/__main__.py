@@ -26,6 +26,7 @@ import importlib
 import re
 
 import uvloop
+import random
 from pyrogram import filters, idle
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
@@ -95,7 +96,7 @@ async def start_bot():
             )
 
         else:
-            await app.send_message(LOG_GROUP_ID, "Bot started!")
+            await app.send_message(LOG_GROUP_ID, "Aʟᴇxɪᴇ sᴛᴀʀᴛᴇᴅ!")
     except Exception:
         pass
 
@@ -114,30 +115,42 @@ home_keyboard_pm = InlineKeyboardMarkup(
     [
         [
             InlineKeyboardButton(
-                text="Commands ❓", callback_data="bot_commands"
+                text="𝐂𝐨𝐦𝐦𝐚𝐧𝐝𝐬 ❓", callback_data="bot_commands"
             ),
             InlineKeyboardButton(
-                text="Repo 🛠",
-                url="https://github.com/thehamkercat/WilliamButcherBot",
+                text="𝐆𝐢𝐭𝐡𝐮𝐛 💫",
+                url="https://github.com/Dilasnaofficical",
             ),
         ],
         [
             InlineKeyboardButton(
-                text="System Stats 🖥",
+                text="𝐒𝐲𝐬𝐭𝐞𝐦 𝐒𝐭𝐚𝐭𝐬 🖥",
                 callback_data="stats_callback",
             ),
             InlineKeyboardButton(
-                text="Support 👨", url="http://t.me/WBBSupport"
+                text="𝐒𝐮𝐩𝐩𝐨𝐫𝐭 𝐂𝐡𝐚𝐭 👨", url="https://t.me/SlNinjaTeam"
             ),
         ],
         [
             InlineKeyboardButton(
-                text="Add Me To Your Group 🎉",
+                text="➕ 𝐀𝐝𝐝 𝐀𝐥𝐞𝐱𝐢𝐞 𝐓𝐨 𝐘𝐨𝐮𝐫 𝐆𝐫𝐨𝐮𝐩 ➕",
                 url=f"http://t.me/{BOT_USERNAME}?startgroup=new",
             )
         ],
     ]
 )
+
+stickers_pm = (
+    "CAACAgIAAxkBAAJHqGJ5Ffm5ldVnfvDf78sHk1ZgQ4ZLAAJOAAMh8AQcFzkntfCjDAIkBA",
+    "CAACAgIAAxkBAAJHp2J5FfVUecsbceAsG6exRMTXv-6qAAJZAAMh8AQcR5_uo_24LfEkBA",
+    "CAACAgIAAxkBAAJHpmJ5FfAayTM489dIhKi7qGs9_15eAAJJAAMh8AQcOPycV0jnC0MkBA",
+    "CAACAgIAAxkBAAJHpWJ5Fe7EhNMaZhpjfhFVE7uTc6SbAAJIAAMh8AQcl-_zn8X90hokBA",
+    "CAACAgIAAxkBAAJHpGJ5Fex9EWYGzXzQkiGPaIswj2o2AAJEAAMh8AQc0_iYE6dM9aokBA",
+    "CAACAgIAAxkBAAJHo2J5FeiKRrQ-3wXHm5RUNx0Lu7RZAAJBAAMh8AQcKgSvkt56N8EkBA",
+    "CAACAgIAAxkBAAJHomJ5FeV1xtFlOhEH3TlgjAs8amK_AAJYAAMh8AQcItiUEZ80L8UkBA",
+    "CAACAgIAAxkBAAJHoWJ5Fdjvt0P3XFZpmqtLUPvlnocOAAJFAAMh8AQcVEccChUEGqEkBA",
+)
+
 
 home_text_pm = (
         f"Hey there! My name is {BOT_NAME}. I can manage your "
@@ -149,31 +162,33 @@ keyboard = InlineKeyboardMarkup(
     [
         [
             InlineKeyboardButton(
-                text="Help ❓",
+                text="𝐇𝐞𝐥𝐩 ❓",
                 url=f"t.me/{BOT_USERNAME}?start=help",
             ),
             InlineKeyboardButton(
-                text="Repo 🛠",
-                url="https://github.com/thehamkercat/WilliamButcherBot",
+                text="𝐆𝐢𝐭𝐡𝐮𝐛 💫",
+                url="https://github.com/Dilasnaofficical",
             ),
         ],
         [
             InlineKeyboardButton(
-                text="System Stats 💻",
+                text="𝐒𝐲𝐬𝐭𝐞𝐦 𝐒𝐭𝐚𝐭𝐬 🖥",
                 callback_data="stats_callback",
             ),
-            InlineKeyboardButton(text="Support 👨", url="t.me/WBBSupport"),
+            InlineKeyboardButton(text="𝐒𝐮𝐩𝐩𝐨𝐫𝐭 𝐂𝐡𝐚𝐭 👨", url="https://t.me/SlNinjaTeam"),
         ],
     ]
 )
 
 
-@app.on_message(~filters.edited & filters.command("start"))
+
+@app.on_message(filters.command("start"))
 async def start(_, message):
     if message.chat.type != "private":
-        return await message.reply(
-            "Pm Me For More Details.", reply_markup=keyboard
-        )
+      try:
+        await message.reply_sticker(random.choice(stickers_pm))
+      except:
+        return
     if len(message.text.split()) > 1:
         name = (message.text.split(None, 1)[1]).lower()
         if name == "mkdwn_help":
@@ -183,8 +198,8 @@ async def start(_, message):
         elif "_" in name:
             module = name.split("_", 1)[1]
             text = (
-                    f"Here is the help for **{HELPABLE[module].__MODULE__}**:\n"
-                    + HELPABLE[module].__HELP__
+                f"Here is the help for **{HELPABLE[module].__MODULE__}**:\n"
+                + HELPABLE[module].__HELP__
             )
             await message.reply(text, disable_web_page_preview=True)
         elif name == "help":
@@ -194,10 +209,15 @@ async def start(_, message):
                 reply_markup=keyb,
             )
     else:
-        await message.reply(
-            home_text_pm,
-            reply_markup=home_keyboard_pm,
-        )
+        try:
+          await message.reply_sticker(random.choice(stickers_pm))
+          await message.reply(
+              home_text_pm,
+              reply_markup=home_keyboard_pm,
+          )
+        except Exception as e:
+          print("Error: " + e)
+          return
     return
 
 
